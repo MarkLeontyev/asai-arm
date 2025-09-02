@@ -1,0 +1,36 @@
+<odoo>
+  <data>
+    <template id="public_page" name="ASAI ARM Public Page">
+      <t t-call="web.layout">
+        <t t-set="title">АСАИ АРМ</t>
+        <div class="o_container">
+          <h2>Задания</h2>
+          <div class="arm-cards">
+            <t t-foreach="tasks" t-as="task">
+              <div class="arm-card">
+                <div class="arm-card__row">
+                  <div class="arm-card__cell arm-card__cell--num">
+                    <span class="arm-label">Номер заказа</span>
+                    <span class="arm-value" t-esc="task['id']"/>
+                  </div>
+                  <div class="arm-card__cell arm-card__cell--name" t-esc="task['name']"/>
+                  <div class="arm-card__cell arm-card__cell--status" t-esc="task['state']"/>
+                  <div class="arm-card__cell arm-card__cell--actions">
+                    <form t-attf-action="/asai/arm/#{task['id']}/take" method="post" class="d-inline">
+                      <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                      <button type="submit" class="btn btn-primary">ВЗЯТЬ В РАБОТУ</button>
+                    </form>
+                  </div>
+                </div>
+                <div class="arm-card__row arm-card__row--sub">
+                  <a class="btn btn-link" t-attf-href="/web#id=#{task['id']}&amp;model=arm.task&amp;view_type=form">ПОДРОБНЕЕ</a>
+                  <a class="btn btn-link" t-attf-href="/web#model=ir.attachment&amp;domain=[[('res_model','=', 'arm.task'), ('res_id','=', #{task['id']})]]">ФАЙЛЫ</a>
+                </div>
+              </div>
+            </t>
+          </div>
+        </div>
+      </t>
+    </template>
+  </data>
+</odoo>

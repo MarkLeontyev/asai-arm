@@ -1,0 +1,73 @@
+<odoo>
+  <data>
+    <record id="view_arm_task_list" model="ir.ui.view">
+      <field name="name">arm.task.list</field>
+      <field name="model">arm.task</field>
+      <field name="arch" type="xml">
+        <list decoration-warning="state == 'in_progress'" decoration-danger="state == 'scrap'" decoration-danger="state == 'done'">
+          <field name="name"/>
+          <field name="state"/>
+          <field name="started_at"/>
+          <field name="finished_at"/>
+          <field name="operator_ids" widget="many2many_tags"/>
+          <button name="action_take" type="object" string="Взять в работу"
+                  invisible="state != 'ready' or state == 'blocked'"/>
+          <button name="action_done" type="object" string="ГОТОВО"
+                  invisible="state != 'in_progress'"/>
+          <button name="action_scrap" type="object" string="БРАК"
+                  invisible="state == 'scrap' or state == 'done'"/>
+        </list>
+      </field>
+    </record>
+
+    <record id="view_arm_task_form" model="ir.ui.view">
+      <field name="name">arm.task.form</field>
+      <field name="model">arm.task</field>
+      <field name="arch" type="xml">
+        <form string="Задание">
+          <sheet>
+            <group>
+              <field name="name"/>
+              <field name="state" widget="statusbar" statusbar_visible="ready,in_progress,done,scrap,blocked"/>
+              <field name="operator_ids" widget="many2many_tags"/>
+              <field name="planned_start"/>
+              <field name="planned_end"/>
+              <field name="started_at" readonly="1"/>
+              <field name="finished_at" readonly="1"/>
+              <field name="duration_minutes" readonly="1"/>
+              <field name="qty"/>
+              <field name="uom_id"/>
+              <field name="attachment_ids" widget="many2many_binary"/>
+              <field name="scrap_reason" invisible="state != 'scrap'"/>
+              <field name="fail_reason" invisible="state != 'blocked'"/>
+            </group>
+          </sheet>
+          <footer>
+            <button name="action_take" string="Взять в работу" type="object"
+                    invisible="state != 'ready' or state == 'blocked'"/>
+            <button name="action_done" string="ГОТОВО" type="object"
+                    invisible="state != 'in_progress'"/>
+            <button name="action_scrap" string="БРАК" type="object"
+                    invisible="state == 'scrap' or state == 'done'"/>
+            <button name="action_cannot_perform" string="Невозможно выполнить" type="object"
+                    invisible="state in ('done','scrap','blocked')"/>
+          </footer>
+          <chatter/>
+        </form>
+      </field>
+    </record>
+
+    <record id="view_arm_task_search" model="ir.ui.view">
+      <field name="name">arm.task.search</field>
+      <field name="model">arm.task</field>
+      <field name="arch" type="xml">
+        <search>
+          <filter string="Активные" name="not_done" domain="[('state','!=','done')]"/>
+          <filter string="Готово" name="done" domain="[('state','=','done')]"/>
+          <field name="state"/>
+          <field name="operator_ids"/>
+        </search>
+      </field>
+    </record>
+  </data>
+</odoo>
