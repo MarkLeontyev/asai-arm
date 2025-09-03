@@ -1,0 +1,11 @@
+.arm-card { padding: 12px; border: 1px solid #e5e5e5; border-radius: 8px; background: #fff; }
+.arm-row { display: flex; gap: 8px; align-items: center; justify-content: space-between; }
+.arm-col-grow { flex: 1; }
+.arm-title { font-weight: 600; font-size: 16px; }
+.arm-status { color: #666; font-size: 12px; }
+.arm-actions { margin-top: 8px; display: flex; gap: 8px; }
+.arm-secondary { margin-top: 6px; display: flex; gap: 8px; }
+.arm-card.in_progress { background: #fff7cc; }
+.arm-card.scrap { background: #ffe6e6; }
+.arm-card.done { opacity: .7; }
+
