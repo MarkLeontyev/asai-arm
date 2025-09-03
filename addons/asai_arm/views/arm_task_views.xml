@@ -10,6 +10,7 @@
           <field name="started_at"/>
           <field name="finished_at"/>
           <field name="operator_id"/>
+          
           <templates>
             <t t-name="card">
               <div t-attf-class="arm-card oe_kanban_global_click o_kanban_record {{ record.state.raw_value }}">
@@ -62,6 +63,16 @@
         </list>
       </field>
     </record>
+    
+    <record id="action_arm_export_csv" model="ir.actions.act_url">
+      <field name="name">Экспорт CSV (Производительность)</field>
+      <field name="type">ir.actions.act_url</field>
+      <field name="url">/asai_arm/export/performance</field>
+      <field name="target">self</field>
+    </record>
+
+    <menuitem id="menu_arm_export_csv" name="Экспорт CSV" parent="menu_asai_root"
+              action="action_arm_export_csv" groups="asai_arm.group_arm_manager" sequence="50"/>
 
     <record id="view_arm_task_form" model="ir.ui.view">
       <field name="name">arm.task.form</field>

@@ -38,6 +38,7 @@ class ArmTask(models.Model):
         store=True,
     )
 
+
     @api.depends("started_at", "finished_at")
     def _compute_duration_minutes(self):
         """Рассчитать длительность в минутах между началом и окончанием."""
@@ -71,10 +72,16 @@ class ArmTask(models.Model):
         for rec in self:
             if rec.state != "in_progress":
                 raise UserError(_("Пометьте задание как 'В работе' перед завершением."))
+            now_dt = fields.Datetime.now()
             rec.write({
                 "state": "done",
-                "finished_at": fields.Datetime.now(),
+                "finished_at": now_dt,
             })
+            # Обновить счётчики на пользователе
+            if rec.operator_id and rec.started_at and rec.finished_at:
+                minutes = int((fields.Datetime.to_datetime(rec.finished_at) - fields.Datetime.to_datetime(rec.started_at)).total_seconds() // 60)
+                hours = max(0.0, minutes / 60.0)
+                self.env['res.users'].arm_apply_counters(rec.operator_id.id, hours_delta=hours, done_delta=1)
 
     def action_scrap(self, reason=None):
         """Отметить задание как брак.
@@ -87,11 +94,16 @@ class ArmTask(models.Model):
                 raise UserError(_("Брак возможен только из статусов 'Готово' или 'В работе'."))
             if not (reason or rec.scrap_reason):
                 return rec._open_reason_dialog(mode="scrap")
+            now_dt = fields.Datetime.now() if not rec.finished_at else rec.finished_at
             rec.write({
                 "state": "scrap",
                 "scrap_reason": reason or rec.scrap_reason,
-                "finished_at": fields.Datetime.now() if not rec.finished_at else rec.finished_at,
+                "finished_at": now_dt,
             })
+            if rec.operator_id and rec.started_at and rec.finished_at:
+                minutes = int((fields.Datetime.to_datetime(rec.finished_at) - fields.Datetime.to_datetime(rec.started_at)).total_seconds() // 60)
+                hours = max(0.0, minutes / 60.0)
+                self.env['res.users'].arm_apply_counters(rec.operator_id.id, hours_delta=hours, scrap_delta=1)
 
     def action_cannot_perform(self, reason=None):
         """Отметить задание как 'невозможно выполнить'.
@@ -193,10 +205,15 @@ class ArmTask(models.Model):
         if mode == "scrap":
             if not self.scrap_reason:
                 raise ValidationError(_("Укажите причину брака"))
+            now_dt = fields.Datetime.now() if not self.finished_at else self.finished_at
             self.write({
                 "state": "scrap",
-                "finished_at": fields.Datetime.now() if not self.finished_at else self.finished_at,
+                "finished_at": now_dt,
             })
+            if self.operator_id and self.started_at and self.finished_at:
+                minutes = int((fields.Datetime.to_datetime(self.finished_at) - fields.Datetime.to_datetime(self.started_at)).total_seconds() // 60)
+                hours = max(0.0, minutes / 60.0)
+                self.env['res.users'].arm_apply_counters(self.operator_id.id, hours_delta=hours, scrap_delta=1)
         elif mode == "blocked":
             if not self.fail_reason:
                 raise ValidationError(_("Укажите причину невозможности выполнения"))
