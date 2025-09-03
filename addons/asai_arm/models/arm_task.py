@@ -25,7 +25,7 @@ class ArmTask(models.Model):
         index=True,
         group_expand="_group_expand_state",
     )
-    operator_ids = fields.Many2many("res.users", string="Операторы", tracking=True)
+    operator_id = fields.Many2one("res.users", string="Оператор", tracking=True, index=True)
     started_at = fields.Datetime(string="Начало", tracking=True)
     finished_at = fields.Datetime(string="Окончание", tracking=True)
     scrap_reason = fields.Text(string="Причина брака")
@@ -52,10 +52,18 @@ class ArmTask(models.Model):
         for rec in self:
             if rec.state not in ("ready",):
                 raise UserError(_("Задание нельзя взять из текущего статуса."))
+            if rec.operator_id and rec.operator_id != self.env.user:
+                raise UserError(_("Задание уже назначено другому оператору."))
+            active_for_user = self.search_count([
+                ("state", "=", "in_progress"),
+                ("operator_id", "=", self.env.user.id),
+            ])
+            if active_for_user:
+                raise UserError(_("У вас уже есть задание в работе."))
             rec.write({
                 "state": "in_progress",
                 "started_at": fields.Datetime.now(),
-                "operator_ids": [(4, self.env.user.id)],
+                "operator_id": self.env.user.id,
             })
 
     def action_done(self):
@@ -85,7 +93,7 @@ class ArmTask(models.Model):
                 "finished_at": fields.Datetime.now() if not rec.finished_at else rec.finished_at,
             })
 
-    def action_cannot_perform(self):
+    def action_cannot_perform(self, reason=None):
         """Отметить задание как 'невозможно выполнить'.
 
         При отсутствии причины откроет модальное окно на этой же модели
@@ -94,6 +102,8 @@ class ArmTask(models.Model):
         for rec in self:
             if rec.state in ("done", "scrap"):
                 raise UserError(_("Задание уже завершено."))
+            if reason:
+                rec.fail_reason = reason
             if not rec.fail_reason:
                 return rec._open_reason_dialog(mode="blocked")
             rec.write({
@@ -194,3 +204,19 @@ class ArmTask(models.Model):
                 "state": "blocked",
             })
         return {"type": "ir.actions.act_window_close"}
+
+    def action_reset_to_ready(self):
+        """Вернуть задание в состояние 'Готово к работе' (для менеджера).
+
+        Сбрасывает время начала/окончания. Причины сохраняем для истории.
+        """
+        if not self.env.user.has_group("asai_arm.group_arm_manager"):
+            raise UserError(_("Недостаточно прав. Обратитесь к менеджеру."))
+        for rec in self:
+            if rec.state in ("scrap", "blocked"):
+                rec.write({
+                    "state": "ready",
+                    "started_at": False,
+                    "finished_at": False,
+                })
+        return {"type": "ir.actions.client", "tag": "reload"}

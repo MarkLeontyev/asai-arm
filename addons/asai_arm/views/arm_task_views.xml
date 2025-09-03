@@ -9,7 +9,7 @@
           <field name="state"/>
           <field name="started_at"/>
           <field name="finished_at"/>
-          <field name="operator_ids"/>
+          <field name="operator_id"/>
           <templates>
             <t t-name="card">
               <div t-attf-class="arm-card oe_kanban_global_click o_kanban_record {{ record.state.raw_value }}">
@@ -49,13 +49,16 @@
           <field name="state"/>
           <field name="started_at"/>
           <field name="finished_at"/>
-          <field name="operator_ids" widget="many2many_tags"/>
+          <field name="operator_id"/>
           <button name="action_take" type="object" string="Взять в работу"
                   invisible="state != 'ready' or state == 'blocked'"/>
           <button name="action_done" type="object" string="ГОТОВО"
                   invisible="state != 'in_progress'"/>
           <button name="action_open_scrap_dialog" type="object" string="БРАК"
                   invisible="state == 'scrap' or state == 'done'"/>
+          <button name="action_reset_to_ready" type="object" string="Вернуть в 'Готово'"
+                  groups="asai_arm.group_arm_manager"
+                  invisible="state not in ('scrap','blocked')"/>
         </list>
       </field>
     </record>
@@ -69,7 +72,7 @@
             <group>
               <field name="name"/>
               <field name="state" widget="statusbar" statusbar_visible="ready,in_progress,done,scrap,blocked"/>
-              <field name="operator_ids" widget="many2many_tags"/>
+              <field name="operator_id"/>
               <field name="started_at" readonly="1"/>
               <field name="finished_at" readonly="1"/>
               <field name="duration_minutes" readonly="1"/>
@@ -99,8 +102,10 @@
       <field name="arch" type="xml">
         <search>
           <filter name="all" string="Все" domain="[]"/>
+          <filter name="my" string="Мои" domain="[( 'operator_id', '=', uid )]"/>
+          <filter name="free" string="Свободные" domain="[( 'operator_id', '=', False ), ('state','!=','done')]"/>
           <field name="state"/>
-          <field name="operator_ids"/>
+          <field name="operator_id"/>
         </search>
       </field>
     </record>
