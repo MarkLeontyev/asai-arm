@@ -21,10 +21,13 @@
         'security/ir.model.access.csv',
         'views/menu.xml',
         'views/arm_task_views.xml',
-        'views/views.xml',
-        'views/templates.xml',
         'data/arm_task_demo.xml',
     ],
+    'assets': {
+        'web.assets_backend': [
+            'asai_arm/static/src/css/arm.css',
+        ],
+    },
     'application': True,
     'license': 'LGPL-3',
 }
