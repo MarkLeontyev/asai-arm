@@ -52,7 +52,7 @@ class TestArmTask(TransactionCase):
 
     def test_operator_cannot_steal_task(self):
         """Нельзя взять задачу, если она назначена другому оператору."""
-        task = self.Task.create({"name": "T3", "operator_ids": [(4, self.op1.id)]})
+        task = self.Task.create({"name": "T3", "operator_id": self.op1.id})
         with self.assertRaisesRegex(Exception, "уже назначено другому оператору"):
             task.with_user(self.op2).action_take()
 
@@ -75,9 +75,9 @@ class TestArmTask(TransactionCase):
 
     def test_my_tasks_domain(self):
         """В разделе "Мои" оператор видит только свои задачи."""
-        a = self.Task.create({"name": "A", "operator_ids": [(4, self.op1.id)]})
-        b = self.Task.create({"name": "B", "operator_ids": [(4, self.op2.id)]})
-        mine = self.Task.with_user(self.op1).search([["operator_ids", "in", [self.op1.id]]])
+        a = self.Task.create({"name": "A", "operator_id": self.op1.id})
+        b = self.Task.create({"name": "B", "operator_id": self.op2.id})
+        mine = self.Task.with_user(self.op1).search([["operator_id", "=", self.op1.id]])
         self.assertIn(a, mine)
         self.assertNotIn(b, mine)
 
