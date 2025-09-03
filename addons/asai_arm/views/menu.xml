@@ -1,0 +1,10 @@
+<odoo>
+  <menuitem id="menu_asai_root" name="АСАИ АРМ" sequence="10"/>
+  <record id="action_arm_tasks" model="ir.actions.act_window">
+    <field name="name">Задания</field>
+    <field name="res_model">arm.task</field>
+    <field name="view_mode">kanban,list,form</field>
+    <field name="domain">[]</field>   <!-- ЯВНО убираем фильтр -->
+  </record>
+  <menuitem id="menu_arm_tasks" name="Задания" parent="menu_asai_root" action="action_arm_tasks"/>
+</odoo>

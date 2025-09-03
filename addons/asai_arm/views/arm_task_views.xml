@@ -1,10 +1,50 @@
 <odoo>
   <data>
+    <record id="view_arm_task_kanban" model="ir.ui.view">
+      <field name="name">arm.task.kanban</field>
+      <field name="model">arm.task</field>
+      <field name="arch" type="xml">
+        <kanban default_group_by="state" class="o_kanban_dashboard">
+          <field name="name"/>
+          <field name="state"/>
+          <field name="started_at"/>
+          <field name="finished_at"/>
+          <field name="operator_ids"/>
+          <templates>
+            <t t-name="card">
+              <div t-attf-class="arm-card oe_kanban_global_click o_kanban_record {{ record.state.raw_value }}">
+                <div class="arm-row">
+                  <div class="arm-col arm-col-grow">
+                    <div class="arm-title" t-esc="record.name.value"/>
+                  </div>
+                  <div class="arm-col arm-status" t-esc="record.state.value"/>
+                </div>
+                <div class="arm-actions">
+                  <t t-if="record.state.raw_value === 'ready'">
+                    <button type="object" name="action_take" class="btn btn-primary">ВЗЯТЬ В РАБОТУ</button>
+                  </t>
+                  <t t-if="record.state.raw_value === 'in_progress'">
+                    <button type="object" name="action_done" class="btn btn-success">ГОТОВО</button>
+                  </t>
+                  <t t-if="record.state.raw_value !== 'scrap' and record.state.raw_value !== 'done'">
+                    <button type="object" name="action_scrap" class="btn btn-danger">БРАК</button>
+                  </t>
+                </div>
+                <div class="arm-secondary">
+                  <a type="open" class="btn btn-link" role="button">ПОДРОБНЕЕ</a>
+                  <button type="object" name="action_open_attachments" class="btn btn-link">ФАЙЛЫ</button>
+                </div>
+              </div>
+            </t>
+          </templates>
+        </kanban>
+      </field>
+    </record>
     <record id="view_arm_task_list" model="ir.ui.view">
       <field name="name">arm.task.list</field>
       <field name="model">arm.task</field>
       <field name="arch" type="xml">
-        <list decoration-warning="state == 'in_progress'" decoration-danger="state == 'scrap'" decoration-danger="state == 'done'">
+        <list decoration-warning="state == 'in_progress'" decoration-danger="state == 'scrap'" decoration-success="state == 'done'">
           <field name="name"/>
           <field name="state"/>
           <field name="started_at"/>
@@ -62,8 +102,7 @@
       <field name="model">arm.task</field>
       <field name="arch" type="xml">
         <search>
-          <filter string="Активные" name="not_done" domain="[('state','!=','done')]"/>
-          <filter string="Готово" name="done" domain="[('state','=','done')]"/>
+          <filter name="all" string="Все" domain="[]"/>
           <field name="state"/>
           <field name="operator_ids"/>
         </search>
