@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+arm_task_operator,arm_task_operator,model_arm_task,asai_arm.group_arm_operator,1,1,0,0
+arm_task_manager,arm_task_manager,model_arm_task,asai_arm.group_arm_manager,1,1,1,1
