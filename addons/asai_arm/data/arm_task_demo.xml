@@ -1,0 +1,71 @@
+<odoo>
+  <data>
+    <record id="arm_task_demo_1" model="arm.task">
+      <field name="name">Деталь A-001</field>
+      <field name="qty">10</field>
+      <field name="state">ready</field>
+    </record>
+    <record id="arm_task_demo_2" model="arm.task">
+      <field name="name">Деталь B-145</field>
+      <field name="qty">5</field>
+      <field name="state">ready</field>
+    </record>
+    <record id="arm_task_demo_3" model="arm.task">
+      <field name="name">Деталь C-210</field>
+      <field name="qty">12</field>
+      <field name="state">in_progress</field>
+      <field name="started_at">2025-09-01 08:00:00</field>
+    </record>
+    <record id="arm_task_demo_4" model="arm.task">
+      <field name="name">Деталь D-332</field>
+      <field name="qty">20</field>
+      <field name="state">ready</field>
+    </record>
+    <record id="arm_task_demo_5" model="arm.task">
+      <field name="name">Деталь E-078</field>
+      <field name="qty">7</field>
+      <field name="state">blocked</field>
+      <field name="fail_reason">Нет материала</field>
+    </record>
+    <record id="arm_task_demo_6" model="arm.task">
+      <field name="name">Деталь F-509</field>
+      <field name="qty">3</field>
+      <field name="state">scrap</field>
+      <field name="scrap_reason">Дефект поверхности</field>
+    </record>
+    <record id="arm_task_demo_7" model="arm.task">
+      <field name="name">Деталь G-901</field>
+      <field name="qty">15</field>
+      <field name="state">ready</field>
+    </record>
+    <record id="arm_task_demo_8" model="arm.task">
+      <field name="name">Деталь H-122</field>
+      <field name="qty">9</field>
+      <field name="state">in_progress</field>
+      <field name="started_at">2025-09-02 09:15:00</field>
+    </record>
+    <record id="arm_task_demo_9" model="arm.task">
+      <field name="name">Деталь J-777</field>
+      <field name="qty">25</field>
+      <field name="state">done</field>
+      <field name="started_at">2025-08-30 10:00:00</field>
+      <field name="finished_at">2025-08-30 14:30:00</field>
+    </record>
+    <record id="arm_task_demo_10" model="arm.task">
+      <field name="name">Деталь K-334</field>
+      <field name="qty">11</field>
+      <field name="state">ready</field>
+    </record>
+    <record id="arm_task_demo_11" model="arm.task">
+      <field name="name">Деталь L-008</field>
+      <field name="qty">6</field>
+      <field name="state">scrap</field>
+      <field name="scrap_reason">Скол</field>
+    </record>
+    <record id="arm_task_demo_12" model="arm.task">
+      <field name="name">Деталь M-560</field>
+      <field name="qty">18</field>
+      <field name="state">ready</field>
+    </record>
+  </data>
+</odoo>
