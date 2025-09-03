@@ -11,6 +11,7 @@ services:
     image: odoo:18.0
     depends_on:
       - db
+    command: bash -lc "odoo -c /etc/odoo/odoo.conf -d ${DB_NAME:-Asai} -u asai_arm --stop-after-init --test-enable && exec odoo -c /etc/odoo/odoo.conf -d ${DB_NAME:-Asai}"
     ports:
       - "8069:8069"
     volumes:
