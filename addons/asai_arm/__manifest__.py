@@ -14,7 +14,7 @@
     'category': 'Manufacturing',
     'version': '18.0.1.0.0',
 
-    'depends': ['base', 'web', 'mail', 'uom'],
+    'depends': ['base', 'web', 'mail'],
 
     'data': [
         'security/asai_arm_security.xml',
