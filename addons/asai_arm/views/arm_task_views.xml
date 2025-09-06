@@ -27,7 +27,10 @@
                   <t t-if="record.state.raw_value === 'in_progress'">
                     <button type="object" name="action_done" class="btn btn-success">ГОТОВО</button>
                   </t>
-                  <t t-if="record.state.raw_value !== 'scrap' and record.state.raw_value !== 'done'">
+                  <t t-if="record.state.raw_value === 'in_progress'">
+                    <button type="object" name="action_open_blocked_dialog" class="btn btn-warning">НЕВОЗМОЖНО</button>
+                  </t>
+                  <t t-if="record.state.raw_value === 'in_progress'">
                     <button type="object" name="action_open_scrap_dialog" class="btn btn-danger">БРАК</button>
                   </t>
                 </div>
@@ -56,8 +59,8 @@
           <button name="action_done" type="object" string="ГОТОВО"
                   invisible="state != 'in_progress'"/>
           <button name="action_open_scrap_dialog" type="object" string="БРАК"
-                  invisible="state == 'scrap' or state == 'done'"/>
-          <button name="action_reset_to_ready" type="object" string="Вернуть в 'Готово'"
+                  invisible="state != 'in_progress'"/>
+          <button name="action_reset_to_ready" type="object" string="Вернуть в 'Работу'"
                   groups="asai_arm.group_arm_manager"
                   invisible="state not in ('scrap','blocked')"/>
         </list>
@@ -98,7 +101,7 @@
             <button name="action_done" string="ГОТОВО" type="object"
                     invisible="state != 'in_progress'"/>
             <button name="action_open_scrap_dialog" string="БРАК" type="object"
-                    invisible="state == 'scrap' or state == 'done'"/>
+                    invisible="state != 'in_progress'"/>
             <button name="action_cannot_perform" string="Невозможно выполнить" type="object"
                     invisible="state in ('done','scrap','blocked')"/>
           </footer>

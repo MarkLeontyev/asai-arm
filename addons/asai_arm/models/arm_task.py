@@ -77,7 +77,6 @@ class ArmTask(models.Model):
                 "state": "done",
                 "finished_at": now_dt,
             })
-            # Обновить счётчики на пользователе
             if rec.operator_id and rec.started_at and rec.finished_at:
                 minutes = int((fields.Datetime.to_datetime(rec.finished_at) - fields.Datetime.to_datetime(rec.started_at)).total_seconds() // 60)
                 hours = max(0.0, minutes / 60.0)

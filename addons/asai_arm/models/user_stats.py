@@ -22,5 +22,3 @@ class ResUsers(models.Model):
             vals["arm_tasks_scrap"] = (user.arm_tasks_scrap or 0) + int(scrap_delta)
         if vals:
             user.write(vals)
-
-

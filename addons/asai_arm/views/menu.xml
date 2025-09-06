@@ -4,7 +4,7 @@
     <field name="name">Задания</field>
     <field name="res_model">arm.task</field>
     <field name="view_mode">kanban,list,form</field>
-    <field name="domain">[]</field>   <!-- ЯВНО убираем фильтр -->
+    <field name="domain">[]</field> 
   </record>
   <menuitem id="menu_arm_tasks" name="Задания" parent="menu_asai_root" action="action_arm_tasks"/>
 </odoo>
