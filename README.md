@@ -18,7 +18,7 @@
 Требуется установленный Docker.
 
 1. Клонируйте репозиторий:
-   - `git clone https://github.com/REPLACE_ME/asai-arm.git`
+   - `git clone https://github.com/markleontyev/asai-arm.git`
    - `cd asai-arm`
 2. Запустите систему:
    - `docker compose up`
